@@ -1,6 +1,7 @@
 package br.com.fiap.agendamentocomia.service;
 
 import br.com.fiap.agendamentocomia.model.Appointment;
+import br.com.fiap.agendamentocomia.model.AppointmentStatus;
 import br.com.fiap.agendamentocomia.repository.AppointmentRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,15 @@ public class AppointmentService {
         return appointmentRepository.findAll();
     }
 
+    public Appointment getById(Long id) {
+        return appointmentRepository.findById(id).orElse(null);
+    }
+
+    public boolean isAvailable(String date, String time) {
+        return !appointmentRepository.existsByAppointmentDateAndAppointmentTimeAndStatus(
+                date, time, AppointmentStatus.SCHEDULED);
+    }
+
     public Appointment createAppointment(Appointment appointment) {
         return appointmentRepository.save(appointment);
     }
@@ -27,6 +37,4 @@ public class AppointmentService {
         appointment.setId(appointmentId);
         return appointmentRepository.save(appointment);
     }
-
-
 }
